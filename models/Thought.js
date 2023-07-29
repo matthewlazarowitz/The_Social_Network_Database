@@ -39,7 +39,7 @@ const thoughtSchema = new mongoose.Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: (createdAt) => createdAt.toISOString(), // 
+      get: (createdAt) => createdAt.toISOString(), 
       type: String,
       required: true,
     },
