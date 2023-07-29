@@ -19,3 +19,19 @@ const thoughts = [
   { id: 1, thoughtText: 'Thought 1', createdAt: new Date(), username: 'user1', reactions: [] },
   { id: 2, thoughtText: 'Thought 2', createdAt: new Date(), username: 'user2', reactions: [] },
 ];
+
+app.get('/api/users', (req, res) => {
+    res.json(users);
+  });
+  
+  
+app.get('/api/users/:id', (req, res) => {
+    const userId = parseInt(req.params.id);
+    const user = users.find((user) => user.id === userId);
+  
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  });
