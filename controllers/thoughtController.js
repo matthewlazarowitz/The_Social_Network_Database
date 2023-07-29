@@ -45,3 +45,42 @@ exports.deleteThought = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
+
+exports.createReaction = async (req, res) => {
+    try {
+      const { thoughtId } = req.params;
+      const { reactionBody, username } = req.body;
+      const newReaction = { reactionBody, username };
+      const updatedThought = await Thought.findByIdAndUpdate(
+        thoughtId,
+        { $push: { reactions: newReaction } },
+        { new: true }
+      );
+      if (!updatedThought) {
+        return res.status(404).json({ message: 'Thought not found' });
+      }
+      res.json(updatedThought);
+    } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+    }
+  };
+  
+  
+  exports.removeReaction = async (req, res) => {
+    try {
+      const { thoughtId, reactionId } = req.params;
+      const updatedThought = await Thought.findByIdAndUpdate(
+        thoughtId,
+        { $pull: { reactions: { reactionId } } },
+        { new: true }
+      );
+      if (!updatedThought) {
+        return res.status(404).json({ message: 'Thought not found' });
+      }
+      res.json(updatedThought);
+    } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+    }
+  };
+  
