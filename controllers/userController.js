@@ -10,3 +10,55 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+exports.getUserById = async (req, res) => {
+    try {
+      const user = await User.findById(req.params.userId)
+        .populate('thoughts')
+        .populate('friends');
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+    }
+  };
+  
+
+  exports.createUser = async (req, res) => {
+    try {
+      const { username, email } = req.body;
+      const newUser = await User.create({ username, email });
+      res.json(newUser);
+    } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+    }
+  };
+  
+  exports.updateUser = async (req, res) => {
+    try {
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.userId,
+        req.body,
+        { new: true }
+      );
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(updatedUser);
+    } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+    }
+  };
+  
+  exports.deleteUser = async (req, res) => {
+    try {
+      const deletedUser = await User.findByIdAndDelete(req.params.userId);
+      if (!deletedUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(deletedUser);
+    } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+    }
+  };
