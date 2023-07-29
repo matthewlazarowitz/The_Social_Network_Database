@@ -66,3 +66,51 @@ app.delete('/api/users/:id', (req, res) => {
       res.status(404).json({ message: 'User not found' });
     }
   });
+
+app.get('/api/thoughts', (req, res) => {
+    res.json(thoughts);
+  });
+  
+app.get('/api/thoughts/:id', (req, res) => {
+    const thoughtId = parseInt(req.params.id);
+    const thought = thoughts.find((thought) => thought.id === thoughtId);
+  
+    if (thought) {
+      res.json(thought);
+    } else {
+      res.status(404).json({ message: 'Thought not found' });
+    }
+  });
+  
+app.post('/api/thoughts', (req, res) => {
+    const newThought = { id: thoughts.length + 1, ...req.body, createdAt: new Date() };
+    thoughts.push(newThought);
+    res.status(201).json(newThought);
+  });
+  
+
+app.put('/api/thoughts/:id', (req, res) => {
+    const thoughtId = parseInt(req.params.id);
+    const thought = thoughts.find((thought) => thought.id === thoughtId);
+  
+    if (thought) {
+      const updatedThought = { ...thought, ...req.body };
+      thoughts[thoughtId - 1] = updatedThought;
+      res.json(updatedThought);
+    } else {
+      res.status(404).json({ message: 'Thought not found' });
+    }
+  });
+  
+
+app.delete('/api/thoughts/:id', (req, res) => {
+    const thoughtId = parseInt(req.params.id);
+    const thoughtIndex = thoughts.findIndex((thought) => thought.id === thoughtId);
+  
+    if (thoughtIndex !== -1) {
+      thoughts.splice(thoughtIndex, 1);
+      res.json({ message: 'Thought deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'Thought not found' });
+    }
+  });
