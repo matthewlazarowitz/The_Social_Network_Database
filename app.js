@@ -35,3 +35,34 @@ app.get('/api/users/:id', (req, res) => {
       res.status(404).json({ message: 'User not found' });
     }
   });
+
+app.post('/api/users', (req, res) => {
+    const newUser = { id: users.length + 1, ...req.body };
+    users.push(newUser);
+    res.status(201).json(newUser);
+  });
+  
+app.put('/api/users/:id', (req, res) => {
+    const userId = parseInt(req.params.id);
+    const user = users.find((user) => user.id === userId);
+  
+    if (user) {
+      const updatedUser = { ...user, ...req.body };
+      users[userId - 1] = updatedUser;
+      res.json(updatedUser);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  });
+  
+app.delete('/api/users/:id', (req, res) => {
+    const userId = parseInt(req.params.id);
+    const userIndex = users.findIndex((user) => user.id === userId);
+  
+    if (userIndex !== -1) {
+      users.splice(userIndex, 1);
+      res.json({ message: 'User deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  });
